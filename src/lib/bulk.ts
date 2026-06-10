@@ -14,6 +14,7 @@ export interface TicketProgress {
   key: string;
   state: TicketState;
   message?: string;
+  current?: string;
 }
 
 const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
@@ -78,6 +79,8 @@ export async function runBulkFlow(
 
       let stoppedAt: string | null = null;
       for (const target of remaining) {
+        ticket.current = target;
+        emit();
         const transitions = await getTransitions(ticket.key);
         const match = matchTransition(transitions, target);
         if (!match) {
@@ -96,10 +99,12 @@ export async function runBulkFlow(
         await sleep(250);
       }
 
+      ticket.current = undefined;
       ticket.state = "done";
       ticket.message = stoppedAt ? `Now at "${stoppedAt}".` : undefined;
       emit();
     } catch (e) {
+      ticket.current = undefined;
       ticket.state = "failed";
       ticket.message = e instanceof Error ? e.message : "Transition failed.";
       emit();

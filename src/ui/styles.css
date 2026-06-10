@@ -497,6 +497,11 @@
   word-break: break-word;
 }
 
+.sm-bulk-current {
+  color: var(--accent);
+  font-weight: 600;
+}
+
 /* Settings panel */
 .sm-settings-head {
   display: flex;

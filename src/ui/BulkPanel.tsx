@@ -240,7 +240,11 @@ function BulkProgress({
             </span>
             <span className="sm-bulk-row">
               <span className="sm-step-label">{t.key}</span>
-              {t.message && <span className="sm-bulk-msg">{t.message}</span>}
+              {t.state === "running" && t.current ? (
+                <span className="sm-bulk-msg sm-bulk-current"> → {t.current}</span>
+              ) : (
+                t.message && <span className="sm-bulk-msg">{t.message}</span>
+              )}
             </span>
           </li>
         ))}
