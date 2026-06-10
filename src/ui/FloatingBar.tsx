@@ -1,13 +1,13 @@
 import type { ReactNode } from "react";
 
 interface Props {
-  issueKey: string;
+  subtitle: string;
   onClose: () => void;
   children: ReactNode;
 }
 
 /** The floating panel that opens from the launcher. */
-export function FloatingBar({ issueKey, onClose, children }: Props) {
+export function FloatingBar({ subtitle, onClose, children }: Props) {
   return (
     <div className="sm-bar" role="dialog" aria-label="Sprint Mate">
       <div className="sm-bar-head">
@@ -25,7 +25,7 @@ export function FloatingBar({ issueKey, onClose, children }: Props) {
           </span>
           <div className="sm-brand-text">
             <span className="sm-brand-name">Sprint Mate</span>
-            <span className="sm-brand-sub">{issueKey}</span>
+            <span className="sm-brand-sub">{subtitle}</span>
           </div>
         </div>
         <button

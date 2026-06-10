@@ -10,6 +10,8 @@ interface Props {
   onEdit: () => void;
   onReset: () => void;
   onClose: () => void;
+  /** Hide the header (title + Done) when rendered inside another settings view. */
+  embedded?: boolean;
 }
 
 export function SettingsPanel({
@@ -21,6 +23,7 @@ export function SettingsPanel({
   onEdit,
   onReset,
   onClose,
+  embedded = false,
 }: Props) {
   const [confirming, setConfirming] = useState(false);
   const last = ordered[ordered.length - 1];
@@ -32,18 +35,20 @@ export function SettingsPanel({
 
   return (
     <div className="sm-settings">
-      <div className="sm-settings-head">
-        <h2 className="sm-settings-title">FastLane Settings</h2>
-        <button className="sm-link" onClick={onClose}>
-          Done
-        </button>
-      </div>
+      {!embedded && (
+        <div className="sm-settings-head">
+          <h2 className="sm-settings-title">FastLane Settings</h2>
+          <button className="sm-link" onClick={onClose}>
+            Done
+          </button>
+        </div>
+      )}
 
-      <label className="sm-field-label" htmlFor="sm-stopat">
+      <label className="sm-field-label" htmlFor={`sm-stopat-${projectKey}`}>
         Stop at
       </label>
       <select
-        id="sm-stopat"
+        id={`sm-stopat-${projectKey}`}
         className="sm-select"
         value={stopAt}
         onChange={(e) => onStopAtChange(e.target.value)}

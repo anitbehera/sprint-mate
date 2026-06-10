@@ -1,5 +1,9 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import { issueKeyFromLocation, projectKeyOf } from "@/src/lib/issue";
+import {
+  issueKeyFromLocation,
+  isFilterPage,
+  projectKeyOf,
+} from "@/src/lib/issue";
 import { getFlow, type FlowConfig } from "@/src/lib/storage";
 import {
   doTransition,
@@ -13,6 +17,7 @@ import { FloatingBar } from "./FloatingBar";
 import { RunProgress, type RunPhase, type RunStep } from "./RunProgress";
 import { SettingsPanel } from "./SettingsPanel";
 import { SetupWizard } from "./SetupWizard";
+import { BulkPanel } from "./BulkPanel";
 
 type View = "idle" | "running" | "settings" | "setup";
 
@@ -21,22 +26,27 @@ const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
 /** Track the current issue/project from the URL, reacting to SPA navigation. */
 function useIssueContext() {
   const [issueKey, setIssueKey] = useState<string | null>(issueKeyFromLocation);
+  const [filter, setFilter] = useState<boolean>(isFilterPage);
 
   useEffect(() => {
-    const onNav = () => setIssueKey(issueKeyFromLocation());
+    const onNav = () => {
+      setIssueKey(issueKeyFromLocation());
+      setFilter(isFilterPage());
+    };
     window.addEventListener("wxt:locationchange", onNav);
     return () => window.removeEventListener("wxt:locationchange", onNav);
   }, []);
 
   return {
     issueKey,
+    isFilter: filter,
     projectKey: issueKey ? projectKeyOf(issueKey) : null,
     host: window.location.host,
   };
 }
 
 export function App() {
-  const { issueKey, projectKey, host } = useIssueContext();
+  const { issueKey, isFilter, projectKey, host } = useIssueContext();
 
   const [open, setOpen] = useState(false);
   const [view, setView] = useState<View>("idle");
@@ -165,6 +175,23 @@ export function App() {
     setView("idle");
   }, []);
 
+  if (!issueKey && isFilter) {
+    return (
+      <div className="sm-root">
+        {!open && <FloatingIcon onClick={() => setOpen(true)} />}
+
+        {open && (
+          <FloatingBar
+            subtitle="Bulk update"
+            onClose={() => setOpen(false)}
+          >
+            <BulkPanel host={host} active={open} />
+          </FloatingBar>
+        )}
+      </div>
+    );
+  }
+
   if (!issueKey) return null;
 
   return (
@@ -173,7 +200,7 @@ export function App() {
 
       {open && (
         <FloatingBar
-          issueKey={issueKey}
+          subtitle={issueKey}
           onClose={() => {
             setOpen(false);
             setView("idle");

@@ -27,6 +27,26 @@ export function issueKeyFromLocation(): string | null {
   return null;
 }
 
+/**
+ * Detects the issue navigator / filter page (e.g. `/issues/?filter=12386` or
+ * `/issues/?jql=...`)
+ */
+export function isFilterPage(): boolean {
+  const { pathname, search } = window.location;
+
+  // A single open issue (e.g. /issues/EC-1234) is not the navigator.
+  if (issueKeyFromLocation()) return false;
+
+  if (/^\/issues\/?$/.test(pathname)) return true;
+
+  // The navigator can also live under project paths; require a filter/jql hint.
+  if (/\/issues\/?$/.test(pathname) && /[?&](filter|jql)=/.test(search)) {
+    return true;
+  }
+
+  return false;
+}
+
 /** Loose extraction from any string (used for manual input / fallbacks). */
 export function extractIssueKey(input: string): string | null {
   const raw = input.trim();

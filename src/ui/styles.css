@@ -339,6 +339,10 @@
   border-color: #fdc9ba;
 }
 
+.sm-step.sm-skipped {
+  opacity: 0.7;
+}
+
 .sm-node {
   width: 22px;
   height: 22px;
@@ -384,6 +388,12 @@
   color: #fff;
 }
 
+.sm-node.sm-skipped {
+  border-color: var(--border);
+  background: var(--panel-2);
+  color: var(--muted);
+}
+
 .sm-step-label {
   font-size: 13px;
   font-weight: 500;
@@ -422,6 +432,69 @@
 
 .sm-run-failed .sm-btn {
   width: 100%;
+}
+
+/* Bulk update */
+.sm-bulk-setup {
+  margin-bottom: 16px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--border);
+}
+
+.sm-bulk-setup > .sm-setup-cta + .sm-setup-cta {
+  margin-top: 14px;
+}
+
+.sm-bulk-settings-card + .sm-bulk-settings-card {
+  margin-top: 8px;
+  padding-top: 16px;
+  border-top: 1px solid var(--border);
+}
+
+.sm-bulk-count {
+  font-size: 13px;
+  margin: 0 0 10px;
+  color: var(--text);
+}
+
+.sm-bulk-keys {
+  list-style: none;
+  margin: 0 0 16px;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  max-height: 132px;
+  overflow-y: auto;
+}
+
+.sm-bulk .sm-run {
+  width: 100%;
+}
+
+.sm-step.sm-running {
+  background: var(--brand-weak);
+  border-color: rgba(1, 118, 211, 0.35);
+}
+
+.sm-node.sm-running {
+  border-color: var(--accent);
+  background: var(--accent);
+  color: #fff;
+  animation: piPulse 1.2s ease-out infinite;
+}
+
+.sm-bulk-row {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.25;
+  min-width: 0;
+}
+
+.sm-bulk-msg {
+  font-size: 11px;
+  color: var(--muted);
+  word-break: break-word;
 }
 
 /* Settings panel */

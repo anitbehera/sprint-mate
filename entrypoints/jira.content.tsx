@@ -2,7 +2,7 @@ import ReactDOM from "react-dom/client";
 import { defineContentScript } from "wxt/utils/define-content-script";
 import { createShadowRootUi } from "wxt/utils/content-script-ui/shadow-root";
 import { injectScript } from "wxt/utils/inject-script";
-import { issueKeyFromLocation } from "@/src/lib/issue";
+import { issueKeyFromLocation, isFilterPage } from "@/src/lib/issue";
 import { App } from "@/src/ui/App";
 import "@/src/ui/styles.css";
 
@@ -27,10 +27,10 @@ export default defineContentScript({
       onRemove: (root) => root?.unmount(),
     });
 
-    // Jira Cloud is a single-page app: mount only when an issue is open, and
-    // re-evaluate on every client-side navigation.
+    // Jira Cloud is a single-page app: mount when an issue is open or on the
+    // issue navigator / filter page, and re-evaluate on every client-side nav.
     const sync = () => {
-      if (issueKeyFromLocation()) ui.mount();
+      if (issueKeyFromLocation() || isFilterPage()) ui.mount();
       else ui.remove();
     };
 
